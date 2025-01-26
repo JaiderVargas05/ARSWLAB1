@@ -2,10 +2,10 @@ package edu.eci.arsw.math;
 
 public class PiThread extends Thread{
     public int start;
+    public int index;
     public int count;
     private static int DigitsPerSum = 8;
     private static double Epsilon = 1e-17;
-    byte[] digits;
     @Override
     public void run(){
         if (start < 0) {
@@ -15,8 +15,6 @@ public class PiThread extends Thread{
         if (count < 0) {
             throw new RuntimeException("Invalid Interval");
         }
-
-        this.digits = new byte[count];
         double sum = 0;
 
         for (int i = 0; i < count; i++) {
@@ -30,11 +28,15 @@ public class PiThread extends Thread{
             }
 
             sum = 16 * (sum - Math.floor(sum));
-            digits[i] = (byte) sum;
+
+            /*System.out.println("index: " + (index + i) + " sum: " + sum);*/
+            PiDigits.putADigit(index + i, (byte) sum);
         }
     }
+    
     public PiThread(int start, int count){
-        this.start =  start;
+        this.start = start;
+        this.index = start;
         this.count = count;
     }
     /// <summary>
