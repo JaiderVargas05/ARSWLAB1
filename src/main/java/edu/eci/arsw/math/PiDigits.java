@@ -75,15 +75,4 @@ public class PiDigits {
         digits[i-s] = value;
     }
 
-    public static void main(String[] args) {
-        Runtime runtime = Runtime.getRuntime();
-
-        long startTime = System.nanoTime();
-        getDigits(0, 10000, 1);
-        long endTime = System.nanoTime();
-        System.out.println(endTime-startTime);
-        System.out.println(runtime.availableProcessors());
-    }
-    //1721773300
-    //2940119200
 }
