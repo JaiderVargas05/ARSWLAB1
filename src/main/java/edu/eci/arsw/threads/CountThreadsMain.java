@@ -13,13 +13,16 @@ package edu.eci.arsw.threads;
  */
 public class CountThreadsMain {
     
+    /**
+     * Creates three threads and starts them to print the numbers between 0 and 200
+     */
     public static void main(String a[]){
         CountThread thread1 = new CountThread(0,99);
         CountThread thread2 = new CountThread(99,199);
         CountThread thread3 = new CountThread(199,200);
-        thread1.run();
-        thread2.run();
-        thread3.run();
+        thread1.start();
+        thread2.start();
+        thread3.start();
     }
     
 }
