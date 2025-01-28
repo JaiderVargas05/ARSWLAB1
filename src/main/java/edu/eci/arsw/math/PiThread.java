@@ -1,44 +1,70 @@
 package edu.eci.arsw.math;
 
-public class PiThread extends Thread{
-    public int start;
-    public int index;
-    public int count;
+/*
+ * PiThread class
+ */
+public class PiThread extends Thread {
+
+    private int subRangeStart;
+    private int subRangeCount;
+    private int indexOfSubRange;
+    private static int start;
+    private static int count;
     private static int DigitsPerSum = 8;
     private static double Epsilon = 1e-17;
-    @Override
-    public void run(){
-        if (start < 0) {
-            throw new RuntimeException("Invalid Interval");
-        }
+    public static byte[] digits;
 
-        if (count < 0) {
+    /**
+     * Initializes the digits array to store the hexadecimal digits of pi in the
+     * specified range.
+     *
+     * @param startRange The start index of the range.
+     * @param countRange The number of elements in the range.
+     */
+    public static void createByteArrayRange(int startRange, int countRange) {
+        start = startRange;
+        count = countRange;
+        digits = new byte[count];
+    }
+
+    /**
+     * Initializes a new instance of the PiThread class.
+     * A specific PiThread object calculates the hexadecimal digits of pi in a
+     * specific sub range.
+     *
+     * @param subRangeStart The start index of the sub range.
+     * @param subRangeCount The number of elements in the sub range.
+     */
+    public PiThread(int subRangeStart, int subRangeCount) {
+        this.subRangeStart = subRangeStart;
+        this.subRangeCount = subRangeCount;
+        this.indexOfSubRange = subRangeStart;
+
+    }
+
+    /**
+     * Modifies the digits array to store the hexadecimal digits of pi in the
+     * specified sub range.
+     */
+    @Override
+    public void run() {
+        if (subRangeStart < 0 || subRangeCount < 0) {
             throw new RuntimeException("Invalid Interval");
         }
         double sum = 0;
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < subRangeCount; i++) {
             if (i % DigitsPerSum == 0) {
-                sum = 4 * sum(1, start)
-                        - 2 * sum(4, start)
-                        - sum(5, start)
-                        - sum(6, start);
-
-                start += DigitsPerSum;
+                sum = 4 * sum(1, subRangeStart)
+                        - 2 * sum(4, subRangeStart)
+                        - sum(5, subRangeStart)
+                        - sum(6, subRangeStart);
+                subRangeStart += DigitsPerSum;
             }
-
             sum = 16 * (sum - Math.floor(sum));
-
-            /*System.out.println("index: " + (index + i) + " sum: " + sum);*/
-            PiDigits.putADigit(index + i, (byte) sum);
+            digits[indexOfSubRange + i - start] = (byte) sum;
         }
     }
-    
-    public PiThread(int start, int count){
-        this.start = start;
-        this.index = start;
-        this.count = count;
-    }
+
     /// <summary>
     /// Returns the sum of 16^(n - k)/(8 * k + m) from 0 to k.
     /// </summary>
@@ -49,10 +75,8 @@ public class PiThread extends Thread{
         double sum = 0;
         int d = m;
         int power = n;
-
         while (true) {
             double term;
-
             if (power > 0) {
                 term = (double) hexExponentModulo(power, d) / d;
             } else {
@@ -61,14 +85,13 @@ public class PiThread extends Thread{
                     break;
                 }
             }
-
             sum += term;
             power--;
             d += 8;
         }
-
         return sum;
     }
+
     /// <summary>
     /// Return 16^p mod m.
     /// </summary>
@@ -80,24 +103,20 @@ public class PiThread extends Thread{
         while (power * 2 <= p) {
             power *= 2;
         }
-
         int result = 1;
-
         while (power > 0) {
             if (p >= power) {
                 result *= 16;
                 result %= m;
                 p -= power;
             }
-
             power /= 2;
-
             if (power > 0) {
                 result *= result;
                 result %= m;
             }
         }
-
         return result;
     }
+
 }
