@@ -18,16 +18,7 @@ public class CountThread extends Thread {
         }
     }
 
-    /*
-     * @Override
-     * public void start() {
-     * for (int i = a; i <= b; i++) {
-     * System.out.println(i);
-     * }
-     * }
-     */
 
-    
     /*
      * Constructor of the class
      * @param a The start of the interval
